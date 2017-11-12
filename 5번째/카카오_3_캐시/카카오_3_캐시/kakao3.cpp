@@ -8,12 +8,12 @@ int nextIndex(int pos)
 	if (pos == cacheSize)
 		return 0;
 	else
-		return (pos + 1)%cacheSize;
+		return (pos + 1)%(cacheSize+1);
 }
 
 int main()
-{	
-	char cache[30][20];
+{
+	char cache[31][20] = { "", };
 	char input[20];
 	int time = 0;
 	int front = 0, rear = 0;
@@ -22,7 +22,7 @@ int main()
 	printf("캐쉬크기 입력 : ");
 	scanf("%d", &cacheSize);
 
-	printf("도시이름 입력 : ");
+ 	printf("도시이름 입력 : ");
 	while (true)
 	{
 		scanf("%s", &input);
@@ -32,8 +32,8 @@ int main()
 
 		isExist = false;
 		for (int i = 1; i <= cacheSize; i++)
-		{
-			if (input == cache[i])
+		{			
+			if (!strcmp(input, cache[i]))
 			{
 				isExist = true;
 				break;
@@ -52,13 +52,14 @@ int main()
 			if (nextIndex(rear) == front)
 			{
 				//LRU규칙에 의한 삭제
-				front++;
-				strcpy(input, cache[rear]);
+				front = (front + 1) % (cacheSize + 1);
+				strcpy(cache[front], input);
+				rear = nextIndex(rear);
 			}
 			else
 			{
 				rear = nextIndex(rear);
-				strcpy(input, cache[rear]);
+				strcpy(cache[rear], input);
 			}
 			time += 5;
 		}		
